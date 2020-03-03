@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
+import { KakaoLogin } from '../components/KakaoLogin';
 
 export default function HomeScreen() {
   return (
@@ -37,10 +38,12 @@ export default function HomeScreen() {
           <View
             style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
             <MonoText>screens/HomeScreen.js</MonoText>
+            <KakaoLogin>test</KakaoLogin>
           </View>
 
           <Text style={styles.getStartedText}>
             Change this text and your app will automatically reload.
+            ... changing ...
           </Text>
         </View>
 
