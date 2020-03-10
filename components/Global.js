@@ -1,0 +1,3 @@
+module.exports = {
+  userProfile: null
+};
