@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from "react-native";
+import {Button, StyleSheet, View} from "react-native";
 import { signOutAsync } from "../components/GoogleLogin";
 import { Updates } from 'expo';
 
@@ -18,13 +18,25 @@ export default function SettingsScreen() {
   };
 
   return (
-    <Button
-      title="Sign Out of Google"
-      onPress={signOut}
-    />
+    <View style={styles.container}>
+      <Button
+        title="Sign Out of Google"
+        onPress={signOut}
+      />
+    </View>
   );
 }
 
 SettingsScreen.navigationOptions = {
-  title: 'app.json',
+  title: 'Settings',
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+  }
+});
