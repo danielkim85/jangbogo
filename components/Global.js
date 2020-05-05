@@ -1,3 +1,4 @@
 module.exports = {
-  userProfile: null
+  userProfile: null,
+  mongoDB : null
 };

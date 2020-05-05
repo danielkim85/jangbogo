@@ -1,7 +1,6 @@
 import React from 'react';
 import { AsyncStorage } from 'react-native';
 import * as AppAuth from 'expo-app-auth';
-import {Updates} from "expo";
 
 let config = {
   issuer: 'https://accounts.google.com',
