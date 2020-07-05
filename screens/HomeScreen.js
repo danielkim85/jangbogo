@@ -1,12 +1,16 @@
-import React,  { Component }from 'react';
+import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
-  Text,
+  Button,
   View
 } from 'react-native';
+
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+
+import { Text } from 'native-base';
+
 import LocationChooser from '../components/LocationChooser.js';
 import MongoDB from '../components/MongoDB.js';
 import GLOBAL from '../components/Global.js';
@@ -34,8 +38,8 @@ export default class HomeScreen extends Component {
       (async () => {
         const mongoDB = new MongoDB();
         GLOBAL.mongoDB = mongoDB;
-        await mongoDB.upsertUser(GLOBAL.userProfile);
-        const user = await mongoDB.getUser(GLOBAL.userProfile.id);
+        await mongoDB.upsert('users',GLOBAL.userProfile.id,GLOBAL.userProfile);
+        const user = await mongoDB.get('users',GLOBAL.userProfile.id);
         console.info(await user);
       })();
     }
@@ -68,9 +72,15 @@ export default class HomeScreen extends Component {
       longitude : location.coords.longitude
     };
     GLOBAL.location= await Location.reverseGeocodeAsync(search);
-    console.info(GLOBAL.location);
-    //console.info(GLOBAL.userProfile);
   };
+
+  onPressLearnMore = async () => {
+    console.info('button pressed');
+    const mongoDB = GLOBAL.mongoDB;
+    await mongoDB.upsert('rooms',GLOBAL.location[0].name,GLOBAL.location[0]);
+    const room = await mongoDB.get('rooms',GLOBAL.location[0].name);
+    console.info(room);
+  }
 
   render() {
 
@@ -84,7 +94,12 @@ export default class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.getStartedContainer}>
-
+          <Button
+            onPress={this.onPressLearnMore}
+            title="Learn More"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          />
           <LocationChooser>test</LocationChooser>
           <Text style={styles.getStartedText}>
             Hello, {GLOBAL.userProfile ? GLOBAL.userProfile.name : ''}

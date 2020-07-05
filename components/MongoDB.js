@@ -2,6 +2,7 @@ import { Stitch, ServerApiKeyCredential, RemoteMongoClient } from "mongodb-stitc
 export default class MongoDB {
   constructor(){
     this.appId = 'spontic-tntxq';
+    this.dbName = 'spontic';
   }
 
   async init(){
@@ -30,17 +31,18 @@ export default class MongoDB {
     return ret;
   }
 
-  async upsertUser(data){
-    if(!this.stitchAppClient && !await this.init()){
+  async push(collection,id,data){
+    if(!this.stitchAppClient && !await this.init()) {
       return;
     }
-    const db = this.mongoClient.db("spontic");
-    const users = db.collection("users");
+    const db = this.mongoClient.db(this.dbName);
+    const collection_ = db.collection(collection);
     let ret;
-    await users
+    await collection_
       .updateOne(
-        {id : data.id},
-        { $set : data}
+        {id : id},
+        { $push : data},
+        {upsert:true}
       )
       .then(() => {
         ret = true;
@@ -51,18 +53,44 @@ export default class MongoDB {
     return ret;
   }
 
-  async getUser(userId){
+  async upsert(collection,id,data){
+    if(!this.stitchAppClient && !await this.init()) {
+      return;
+    }
+    const db = this.mongoClient.db(this.dbName);
+    const collection_ = db.collection(collection);
+    let ret;
+    await collection_
+      .updateOne(
+        {id : id},
+        { $set : data},
+        {upsert:true}
+      )
+      .then(() => {
+        ret = true;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+    return ret;
+  }
+
+  async get(collection,id,projection){
     if(!this.stitchAppClient && !await this.init()){
       return;
     }
-    const db = this.mongoClient.db("spontic");
-    const users = db.collection("users");
+    const db = this.mongoClient.db(this.dbName);
+    const collection_ = db.collection(collection);
     let ret;
-    await users
-      .find({ id: userId }, { sort: { date: -1 } })
+    let options = { sort: { date: -1 } };
+    if(projection){
+      options.projection = projection;
+    }
+    await collection_
+      .find({ id: id }, options)
       .asArray()
       .then(docs => {
-        ret = docs.length > 0 ? docs[0] : null;
+        ret = docs.length > 0 ? docs : null;
       })
       .catch(err => {
         console.error(err);

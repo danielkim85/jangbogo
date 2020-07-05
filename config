@@ -6,7 +6,7 @@
 	ignorecase = true
 	precomposeunicode = true
 [remote "origin"]
-	url = https://github.com/danielkim85/jangbogo.git
+	url = https://github.com/danielkim85/hive.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
 [branch "master"]
 	remote = origin
